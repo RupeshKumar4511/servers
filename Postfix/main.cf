@@ -1,0 +1,30 @@
+sudo apt instal postfix
+sudo apt install libsasl2-modules
+sudo nano /etc/postfix/main.cf
+
+# General settings
+myhostname = yourhostname.com  # Replace with your server's hostname
+mydomain = yourdomain.com      # Replace with your domain
+myorigin = /etc/mailname       # Default domain from /etc/mailname
+inet_interfaces = all          # Listen on all interfaces
+
+# Gmail SMTP settings
+relayhost = [smtp.gmail.com]:587       # Gmail SMTP server and port 587 (TLS)
+smtp_sasl_auth_enable = yes            # Enable SASL authentication
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd  # Path to the password file
+smtp_sasl_security_options = noanonymous  # Disable anonymous login
+smtp_tls_security_level = may          # Enable TLS encryption
+smtp_tls_loglevel = 1                  # Log TLS debug info
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt  # CA certificates
+
+
+sudo nano /etc/postfix/sasl_passwd
+
+[smtp.gmail.com]:587    your-email@gmail.com:your-app-password
+
+sudo systemctl reload postfix
+
+sudo apt update
+sudo apt install mailutils
+
+echo "Test email body" | mail -s "Test Subject" recipient@example.com
